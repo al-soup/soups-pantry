@@ -1,6 +1,6 @@
 import { NumberApiProperty, StringApiProperty } from 'src/common/decorators';
 
-export class HabitResponseDto {
+export class CreateHabitDto {
   @NumberApiProperty({
     example: 123,
     description: 'Which action was completed with the habit',
@@ -13,13 +13,6 @@ export class HabitResponseDto {
     nullable: false,
   })
   completed_at: string;
-
-  @NumberApiProperty({
-    example: 1,
-    description: 'The ID of the habit',
-    readOnly: true,
-  })
-  id: number;
 
   @StringApiProperty({
     example: 'This is a note',

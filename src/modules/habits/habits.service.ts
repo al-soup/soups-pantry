@@ -6,6 +6,7 @@ import {
   ENV_SUPABASE_URL,
 } from 'src/common/constants/database.constants';
 import { Database } from 'src/common/types/database.types';
+import { CreateHabitDto } from './dto/create-habit.dto';
 import { HabitResponseDto } from './dto/habits-response.dto';
 
 @Injectable()
@@ -46,5 +47,28 @@ export class HabitsService {
       });
 
     return filteredHabits;
+  }
+
+  async createHabit(createHabitDto: CreateHabitDto): Promise<HabitResponseDto> {
+    const { data, error } = await this.supabase
+      .from('habit')
+      .insert([createHabitDto])
+      .select()
+      .single();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    const dto: HabitResponseDto = {
+      action_id: data.action_id,
+      completed_at: data.completed_at as string,
+      id: data.id,
+    };
+    if (data.note) {
+      dto.note = data.note;
+    }
+
+    return dto;
   }
 }
