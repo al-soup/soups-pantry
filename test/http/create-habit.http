@@ -1,0 +1,7 @@
+POST http://localhost:3000/habits
+Content-Type: application/json
+
+{
+  "action_id": 13,
+  "note": "Bridge and Adapter pattern"
+}

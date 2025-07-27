@@ -1,0 +1,2 @@
+GET http://localhost:3000/habits
+Content-Type: application/json

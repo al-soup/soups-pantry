@@ -1,4 +1,4 @@
-import { NumberApiProperty, StringApiProperty } from 'src/common/decorators';
+import { NumberApiProperty, StringApiProperty } from 'src/common/pipes';
 
 export class CreateHabitDto {
   @NumberApiProperty({
@@ -11,6 +11,7 @@ export class CreateHabitDto {
     example: '2024-06-01T12:00:00Z',
     description: 'The date and time the habit was completed',
     nullable: false,
+    optional: true,
   })
   completed_at: string;
 

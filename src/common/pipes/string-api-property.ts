@@ -2,6 +2,7 @@ import { applyDecorators } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEnum,
+  IsNotEmpty,
   IsOptional,
   IsString,
   MaxLength,
@@ -18,6 +19,7 @@ interface StringApiPropertyOptions {
   example?: string;
   nullable?: boolean;
   validationOptions?: ValidationOptions;
+  nonEmpty?: boolean;
 }
 
 export function StringApiProperty(options?: StringApiPropertyOptions) {
@@ -41,12 +43,16 @@ export function StringApiProperty(options?: StringApiPropertyOptions) {
     decorators.push(IsEnum(options.enum, options?.validationOptions));
   }
 
+  if (options?.nonEmpty === true) {
+    decorators.push(IsNotEmpty(options?.validationOptions));
+  }
+
   decorators.push(
     ApiProperty({
       example: options?.example,
       description: options?.description,
       nullable: options?.nullable === true,
-      required: !options?.optional === true,
+      required: options?.optional !== true,
     }),
   );
 

@@ -1,4 +1,4 @@
-import { NumberApiProperty, StringApiProperty } from 'src/common/decorators';
+import { NumberApiProperty, StringApiProperty } from 'src/common/pipes';
 
 export class HabitResponseDto {
   @NumberApiProperty({
