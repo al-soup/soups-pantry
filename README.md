@@ -1,4 +1,4 @@
-# Soup's Pantry
+# Soup's Pantry 🥫
 
 A collection of my APIs.
 
