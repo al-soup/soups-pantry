@@ -12,7 +12,7 @@ const config: Config = {
   },
   moduleNameMapper: {
     'src/(.*)': '<rootDir>/src/$1',
-    'test/(.*)': '<rootDir>/__test__/$1',
+    'test/(.*)': '<rootDir>/test/$1',
   },
 };
 

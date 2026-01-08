@@ -15,7 +15,7 @@ export class HabitsController {
   })
   @ApiOkResponse({ type: [GetHabitDto] })
   async findAll(): Promise<GetHabitDto[]> {
-    const habits = await this.habitsService.getAllHabits();
+    const habits = await this.habitsService.getHabits();
 
     return habits.filter((habit) => habit.completed_at !== null);
   }

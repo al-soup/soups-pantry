@@ -48,14 +48,8 @@ src/
 
 ## TODO
 
-Next steps
-
-- Test the validator decorators
-- Move common descriptions of the api to a variable
-- getting a better grip on decorators + <> vs as
-- move db to service
-- add some tests for habits - maybe take up TDD
-- Secure the API
+- [ ] Test the validator decorators
+- [ ] Move common descriptions of the api to a variable
 
 ## Future Plans
 
