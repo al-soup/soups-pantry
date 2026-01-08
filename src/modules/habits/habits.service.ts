@@ -27,7 +27,10 @@ export class HabitsService {
   }
 
   async getAllHabits(): Promise<HabitResponseDto[]> {
-    const { data, error } = await this.supabase.from('habit').select('*');
+    const { data, error } = await this.supabase
+      .from('habit')
+      .select('*')
+      .limit(10);
     if (error) {
       throw new Error(error.message);
     }

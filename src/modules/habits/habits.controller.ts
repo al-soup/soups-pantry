@@ -1,12 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { HabitsService } from './habits.service';
-import { CreateHabitDto } from './dto/create-habit.dto';
+import { Controller, Get } from '@nestjs/common';
+import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { HabitResponseDto } from './dto/habits-response.dto';
-import {
-  ApiCreatedResponse,
-  ApiOkResponse,
-  ApiOperation,
-} from '@nestjs/swagger';
+import { HabitsService } from './habits.service';
 
 @Controller('habits')
 export class HabitsController {
@@ -25,19 +20,25 @@ export class HabitsController {
     return habits.filter((habit) => habit.completed_at !== null);
   }
 
-  @Post()
-  @ApiOperation({
-    summary: 'Create a new habit',
-    description: 'Creates a new habit in the database',
-    tags: ['habits'],
-  })
-  @ApiCreatedResponse({
-    type: HabitResponseDto,
-    description: 'The habit has been successfully created',
-  })
-  async create(
-    @Body() createHabitDto: CreateHabitDto,
-  ): Promise<HabitResponseDto> {
-    return this.habitsService.createHabit(createHabitDto);
-  }
+  //   @Post()
+  //   @ApiOperation({
+  //     summary: 'Create a new habit',
+  //     description: 'Creates a new habit in the database',
+  //     tags: ['habits'],
+  //   })
+  //   @ApiCreatedResponse({
+  //     type: HabitResponseDto,
+  //     description: 'The habit has been successfully created',
+  //   })
+  //   async create(
+  //     @Body() createHabitDto: CreateHabitDto,
+  //   ): Promise<HabitResponseDto> {
+  //     console.log(createHabitDto);
+  //     return {
+  //       action_id: 0,
+  //       completed_at: new Date().toISOString(),
+  //       id: 1,
+  //     };
+  //     // return this.habitsService.createHabit(createHabitDto);
+  //   }
 }
