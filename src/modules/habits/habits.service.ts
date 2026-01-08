@@ -7,7 +7,7 @@ import {
 } from 'src/common/constants/database.constants';
 import { Database } from 'src/common/types/database.types';
 import { CreateHabitDto } from './dto/create-habit.dto';
-import { HabitResponseDto } from './dto/habits-response.dto';
+import { GetHabitDto } from './dto/get-habit.dto';
 
 @Injectable()
 export class HabitsService {
@@ -26,7 +26,7 @@ export class HabitsService {
     this.supabase = createClient(supabaseUrl, supabaseKey);
   }
 
-  async getAllHabits(): Promise<HabitResponseDto[]> {
+  async getAllHabits(): Promise<GetHabitDto[]> {
     const { data, error } = await this.supabase
       .from('habit')
       .select('*')
@@ -38,7 +38,7 @@ export class HabitsService {
     const filteredHabits = data
       .filter((habit) => habit.completed_at !== null)
       .map((habit) => {
-        const dto: HabitResponseDto = {
+        const dto: GetHabitDto = {
           action_id: habit.action_id,
           completed_at: habit.completed_at as string,
           id: habit.id,
@@ -52,7 +52,7 @@ export class HabitsService {
     return filteredHabits;
   }
 
-  async createHabit(createHabitDto: CreateHabitDto): Promise<HabitResponseDto> {
+  async createHabit(createHabitDto: CreateHabitDto): Promise<GetHabitDto> {
     const { data, error } = await this.supabase
       .from('habit')
       .insert([createHabitDto])
@@ -63,7 +63,7 @@ export class HabitsService {
       throw new Error(error.message);
     }
 
-    const dto: HabitResponseDto = {
+    const dto: GetHabitDto = {
       action_id: data.action_id,
       completed_at: data.completed_at as string,
       id: data.id,

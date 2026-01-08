@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
-import { HabitResponseDto } from './dto/habits-response.dto';
+import { GetHabitDto } from './dto/get-habit.dto';
 import { HabitsService } from './habits.service';
 
 @Controller('habits')
@@ -13,8 +13,8 @@ export class HabitsController {
     description: 'Retrieves a list of all habits from the database',
     tags: ['habits'],
   })
-  @ApiOkResponse({ type: [HabitResponseDto] })
-  async findAll(): Promise<HabitResponseDto[]> {
+  @ApiOkResponse({ type: [GetHabitDto] })
+  async findAll(): Promise<GetHabitDto[]> {
     const habits = await this.habitsService.getAllHabits();
 
     return habits.filter((habit) => habit.completed_at !== null);

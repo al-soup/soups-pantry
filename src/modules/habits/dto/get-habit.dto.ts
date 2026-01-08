@@ -1,6 +1,6 @@
 import { NumberApiProperty, StringApiProperty } from 'src/common/pipes';
 
-export class HabitResponseDto {
+export class GetHabitDto {
   @NumberApiProperty({
     example: 123,
     description: 'Which action was completed with the habit',
