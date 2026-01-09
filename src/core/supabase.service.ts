@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import {
@@ -10,6 +10,7 @@ import { CreateHabitDto } from 'src/modules/habits/dto/create-habit.dto';
 
 @Injectable()
 export class SupabaseService {
+  private readonly logger = new Logger(SupabaseService.name);
   private supabase: SupabaseClient<Database>;
 
   constructor(private readonly configService: ConfigService) {
@@ -21,6 +22,15 @@ export class SupabaseService {
         `${ENV_SUPABASE_URL} or ${ENV_SUPABASE_SECRET_KEY} is not set`,
       );
     }
+
+    const isLocal =
+      supabaseUrl.includes('127.0.0.1') || supabaseUrl.includes('localhost');
+    const maskedUrl = isLocal
+      ? supabaseUrl
+      : supabaseUrl.replace(/https?:\/\/([^.]+)\./, 'https://***.');
+    this.logger.log(
+      `Connecting to ${isLocal ? 'LOCAL' : 'REMOTE'} Supabase instance: ${maskedUrl}`,
+    );
 
     this.supabase = createClient(supabaseUrl, supabaseKey);
   }
