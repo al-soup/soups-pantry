@@ -27,30 +27,47 @@ src/
 - External service wrapper? → *integrations/*
 - CLI job? → *commands/*
 
-## Naming Conventions
+### Naming Conventions
 
 | Type         | Convention                    | Example                       |
 |--------------|-------------------------------|-------------------------------|
 | Domain Folder| Singular                      | payee/, account/              |
 | Reusable Code| Plural                        | pipes/, utils/                |
-| Service      | [name].service.ts             | user.service.ts              |
+| Service      | [name].service.ts             | user.service.ts               |
 | Module       | [name].module.ts              | auth.module.ts                |
-| DTO          | [action]-[entity].dto.ts      | create-user.dto.ts           |
+| DTO          | [action]-[entity].dto.ts      | create-user.dto.ts            |
 | Client       | [provider]-[entity].client.ts | stripe-payment.client.ts      |
 | Guard/Pipe   | [name].guard.ts / .pipe.ts    | jwt.guard.ts                  |
 
-## Testing Rules
+## Testing
 
 | Type       | Location                      | Example                  |
 |------------|-------------------------------|--------------------------|
 | Unit Test  | Beside implementation file    | user.service.spec.ts     |
 | E2E Test   | In test/ or e2e/ folder       | user.e2e-spec.ts         |
 
+### E2E Testing
+
+E2E tests are automatically configured to use your local Supabase instance:
+
+- Tests set `NODE_ENV=test` automatically, ensuring `.env.local` is loaded
+- **Local Supabase is automatically started** before running e2e tests if it's not already running
+
+**Running e2e tests:**
+
+```bash
+pnpm run test:e2e
+```
+
+**Note:** The test setup file (`test/setup-e2e.ts`) will run before e2e tests are started.
+
 ## Local Development
 
 ### Prerequisites
 
 [Docker Desktop](https://docs.docker.com/desktop/) and [Supabase CLI](https://supabase.com/docs/guides/local-development/cli/getting-started) need to be installed.
+
+### Setting up Supabase
 
 This project uses Supabase for the database. To run Supabase locally:
 
@@ -153,8 +170,6 @@ pnpm run start:dev
 # Use remote Supabase
 NODE_ENV=production pnpm run start:dev
 ```
-
-**Note:** When `NODE_ENV=production`, `.env.local` is not loaded, allowing `.env.production` to take precedence. This enables using production data while running in development mode.
 
 ## TODO
 

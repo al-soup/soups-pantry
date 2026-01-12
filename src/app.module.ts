@@ -13,6 +13,7 @@ import { HabitsModule } from './modules/habits/habits.module';
         '.env',
         // Only load .env.local if NODE_ENV is not explicitly set to production
         // This allows .env.production to override .env.local when NODE_ENV=production
+        // For e2e tests (NODE_ENV=test), .env.local will be loaded to use local Supabase
         ...(process.env.NODE_ENV !== 'production' ? ['.env.local'] : []),
         `.env.${process.env.NODE_ENV || 'development'}`,
         `.env.${process.env.NODE_ENV || 'development'}.local`,
