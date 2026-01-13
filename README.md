@@ -173,9 +173,23 @@ NODE_ENV=production pnpm run start:dev
 
 ## TODO
 
+### Deployment
+
+- [ ] Add step to the CI where the app is built
+- [ ] Add unit test coverage
+- [ ] Add the PR workflow which reuses CI
+- [ ] Run the e2e tests with (possibly chached) local Supabase
+- [ ] Deploy the App to Vercel
+- [ ] Deploy Swagger Spec
+
+### Next Feature
+
+- [ ] Add pagination to GET /habits
+- [ ] Add GET endpoint for a single habit
+- [ ] Add Authenticated routes
+- [ ] Add POST /habit
 - [ ] Test the validator decorators
-- [ ] Move common descriptions of the api to a variable
 
-## Future Plans
+## Later Features
 
-- [ ] Create a CRON that checks the [Strava API](https://developers.strava.com/docs/getting-started/) daily and creates entries for cycling
+- [ ] Create a CRON that checks the [Strava API](https://developers.strava.com/docs/getting-started/) daily and creates habit entries for cycling
