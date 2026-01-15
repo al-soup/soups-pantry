@@ -1,4 +1,4 @@
-name: PR Checks
+name: PR
 
 on:
   pull_request:
@@ -8,4 +8,37 @@ on:
 jobs:
   ci:
     uses: ./.github/workflows/ci.yml
+
+  e2e:
+    needs: ci
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: test
+      SUPABASE_URL: http://127.0.0.1:54321
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-node-pnpm
+
+      - name: Install Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: 2.67.1
+
+      # Exclude unused services for faster e2e setup
+      - name: Start and seed Supabase
+        run: |
+          cp supabase/config.ci.toml supabase/config.toml
+          supabase start -x realtime,storage-api,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+
+      # Local secrets are derived from a publicly known JWT signing key so they don't actually have to be kept secret. Doing this here just for good practice.
+      - name: Set Supabase env vars
+        run: echo "SUPABASE_SECRET_KEY=$(supabase status --output json | jq -r '.SECRET_KEY')" >> $GITHUB_ENV
+
+      - name: Run e2e tests
+        run: pnpm run test:e2e
+
+      - name: Stop Supabase
+        if: always()
+        run: supabase stop
 

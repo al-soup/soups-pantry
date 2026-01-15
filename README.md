@@ -2,7 +2,7 @@
 
 A collection of my APIs.
 
-## Folder Structure
+## NestJS Folder Structure
 
 ```text
 src/
@@ -48,7 +48,7 @@ src/
 
 ### E2E Testing
 
-E2E tests are automatically configured to use your local Supabase instance:
+E2E tests are automatically configured to use the local Supabase instance:
 
 - Tests set `NODE_ENV=test` automatically, ensuring `.env.local` is loaded
 - **Local Supabase is automatically started** before running e2e tests if it's not already running
@@ -60,6 +60,10 @@ pnpm run test:e2e
 ```
 
 **Note:** The test setup file (`test/setup-e2e.ts`) will run before e2e tests are started.
+
+### E2E in CI
+
+The supabase instance is created from *supabase/config.ci.toml* where most services are disabled (e.g. realtime, analytics, etc.) to improve start-up time of the container. In the workflow step that is installing Supabase these services are excluded as well so the Docker images of the services are not downloaded. If any of these services are required for e2e tests in the future, they will have to be enabled in the config and removed from the exclusion list.
 
 ## Local Development
 
@@ -171,25 +175,20 @@ pnpm run start:dev
 NODE_ENV=production pnpm run start:dev
 ```
 
-## TODO
+## TODOs
 
-### Deployment
+### Infrastructure
 
-- [ ] Add step to the CI where the app is built
-- [ ] Add unit test coverage
-- [ ] Add the PR workflow which reuses CI
-- [ ] Run the e2e tests with (possibly chached) local Supabase
-- [ ] Deploy the App to Vercel
+- [ ] Deploy the app on Vercel. Go through usasge limits of Vercel & Supabase.
+- [ ] Setup caching for the CI step 'Start and seed Supabase'. E.g. with [Caching Action](https://github.com/actions/cache). with hashing the *supabase/config.ci.toml* and the migrations files.
+- [ ] Add CI step for unit test coverage
 - [ ] Deploy Swagger Spec
 
-### Next Feature
+### Features
 
-- [ ] Add pagination to GET /habits
 - [ ] Add GET endpoint for a single habit
-- [ ] Add Authenticated routes
-- [ ] Add POST /habit
+- [ ] Add pagination to GET /habits
+- [ ] Add Authenticated routes by using Supabase signing keys
 - [ ] Test the validator decorators
-
-## Later Features
-
 - [ ] Create a CRON that checks the [Strava API](https://developers.strava.com/docs/getting-started/) daily and creates habit entries for cycling
+- [ ] Write a real-time polling app in Nest
