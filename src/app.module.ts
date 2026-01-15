@@ -9,6 +9,7 @@ import { HabitsModule } from './modules/habits/habits.module';
     ConfigModule.forRoot({
       isGlobal: true,
       // Load environment files in order of priority (later files override earlier ones)
+      // Env vars set in process.env take precedence over env files
       envFilePath: [
         '.env',
         // Only load .env.local if NODE_ENV is not explicitly set to production

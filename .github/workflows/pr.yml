@@ -9,3 +9,30 @@ jobs:
   ci:
     uses: ./.github/workflows/ci.yml
 
+  e2e:
+    needs: ci
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: test
+      SUPABASE_URL: ${{ secrets.LOCAL_SUPABASE_URL }}
+      SUPABASE_SECRET_KEY: ${{ secrets.LOCAL_SUPABASE_SECRET_KEY }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-node-pnpm
+
+      - name: Install Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start and seed Supabase
+        run: supabase start
+
+      - name: Run e2e tests
+        run: pnpm run test:e2e
+
+      - name: Stop Supabase
+        if: always()
+        run: supabase stop
+
