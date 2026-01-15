@@ -27,7 +27,9 @@ jobs:
 
       # Exclude services for faster e2e setup
       - name: Start and seed Supabase
-        run: supabase start -x realtime,storage-api,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+        run: |
+          cp supabase/config.ci.toml supabase/config.toml
+          supabase start -x realtime,storage-api,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
 
       - name: Set Supabase env vars
         run: echo "SUPABASE_SECRET_KEY=$(supabase status --output json | jq -r '.SECRET_KEY')" >> $GITHUB_ENV
