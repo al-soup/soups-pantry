@@ -25,12 +25,13 @@ jobs:
         with:
           version: 2.67.1
 
-      # Exclude services for faster e2e setup
+      # Exclude unused services for faster e2e setup
       - name: Start and seed Supabase
         run: |
           cp supabase/config.ci.toml supabase/config.toml
           supabase start -x realtime,storage-api,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
 
+      # Local secrets are derived from a publicly known JWT signing key so they don't actually have to be kept secret. Doing this here just for good practice.
       - name: Set Supabase env vars
         run: echo "SUPABASE_SECRET_KEY=$(supabase status --output json | jq -r '.SECRET_KEY')" >> $GITHUB_ENV
 
