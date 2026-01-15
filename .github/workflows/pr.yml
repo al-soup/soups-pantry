@@ -14,8 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NODE_ENV: test
-    #   SUPABASE_URL: ${{ secrets.LOCAL_SUPABASE_URL }}
-    #   SUPABASE_SECRET_KEY: ${{ secrets.LOCAL_SUPABASE_SECRET_KEY }}
+      SUPABASE_URL: http://127.0.0.1:54321
 
     steps:
       - uses: actions/checkout@v4
@@ -24,15 +23,14 @@ jobs:
       - name: Install Supabase CLI
         uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 2.67
 
+      # Exclude services for faster e2e setup
       - name: Start and seed Supabase
-        run: supabase start
+        run: supabase start --exclude mailpit,studio,edge-runtime,logflare,vector,supavisor
 
       - name: Set Supabase env vars
-        run: |
-          echo "SUPABASE_URL=$(supabase status --output json | jq -r '.API_URL')" >> $GITHUB_ENV
-          echo "SUPABASE_SECRET_KEY=$(supabase status --output json | jq -r '.SECRET_KEY')" >> $GITHUB_ENV
+        run: echo "SUPABASE_SECRET_KEY=$(supabase status --output json | jq -r '.SECRET_KEY')" >> $GITHUB_ENV
 
       - name: Run e2e tests
         run: pnpm run test:e2e
