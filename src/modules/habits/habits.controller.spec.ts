@@ -50,4 +50,24 @@ describe('HabitsController', () => {
     expect(result).toEqual(habitDtos);
     expect(getHabitsSpy).toHaveBeenCalledTimes(1);
   });
+
+  it('should return a single habit by id', async () => {
+    const habitDto: GetHabitDto = {
+      id: 1,
+      action_id: 123,
+      completed_at: '2024-06-01T12:00:00Z',
+      note: 'Test note',
+    };
+
+    const habitsService = module.get<HabitsService>(HabitsService);
+    const getHabitByIdSpy = jest
+      .spyOn(habitsService, 'getHabitById')
+      .mockResolvedValue(habitDto);
+
+    const result = await controller.findOne(1);
+
+    expect(result).toEqual(habitDto);
+    expect(getHabitByIdSpy).toHaveBeenCalledWith(1);
+    expect(getHabitByIdSpy).toHaveBeenCalledTimes(1);
+  });
 });

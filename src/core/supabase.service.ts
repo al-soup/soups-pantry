@@ -48,6 +48,19 @@ export class SupabaseService {
     return data;
   }
 
+  async getHabitById(id: number): Promise<Tables<'habit'>> {
+    const { data, error } = await this.supabase
+      .from('habit')
+      .select('*')
+      .eq('id', id)
+      .single();
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return data;
+  }
+
   // TODO create return type
   // TODO extend mock
   // TODO look into error handling

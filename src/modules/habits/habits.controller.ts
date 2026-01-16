@@ -1,5 +1,5 @@
-import { Controller, Get } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import { ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { GetHabitDto } from './dto/get-habit.dto';
 import { HabitsService } from './habits.service';
 
@@ -10,7 +10,7 @@ export class HabitsController {
   @Get()
   @ApiOperation({
     summary: 'Get all habits',
-    description: 'Retrieves a list of all habits from the database',
+    description: 'Retrieves a list of all habits',
     tags: ['habits'],
   })
   @ApiOkResponse({ type: [GetHabitDto] })
@@ -18,6 +18,24 @@ export class HabitsController {
     const habits = await this.habitsService.getHabits();
 
     return habits.filter((habit) => habit.completed_at !== null);
+  }
+
+  // TODO implement 404 and 500
+
+  @Get(':id')
+  @ApiOperation({
+    summary: 'Get a single habit',
+    description: 'Retrieves a single habit by ID',
+    tags: ['habits'],
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'The ID of the habit to retrieve',
+  })
+  @ApiOkResponse({ type: GetHabitDto })
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<GetHabitDto> {
+    return this.habitsService.getHabitById(id);
   }
 
   //   @Post()

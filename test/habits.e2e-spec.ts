@@ -45,4 +45,35 @@ describe('HabitsController (e2e)', () => {
         });
     });
   });
+
+  describe('GET /habits/:id', () => {
+    it('should return a single habit by id', async () => {
+      // First, get all habits to find a valid ID
+      const allHabitsResponse = await request(app.getHttpServer())
+        .get('/habits')
+        .expect(200);
+
+      const habits = allHabitsResponse.body as Array<GetHabitDto>;
+      expect(habits.length).toBeGreaterThan(0);
+
+      const habitId = habits[0].id;
+
+      // Then, get the specific habit
+      return request(app.getHttpServer())
+        .get(`/habits/${habitId}`)
+        .expect(200)
+        .expect((res) => {
+          const habit = res.body as GetHabitDto;
+
+          expect(habit).toHaveProperty('id');
+          expect(habit).toHaveProperty('action_id');
+          expect(habit).toHaveProperty('completed_at');
+          expect(habit.id).toBe(habitId);
+        });
+    });
+
+    it('should return 400 for invalid id', () => {
+      return request(app.getHttpServer()).get('/habits/invalid').expect(400);
+    });
+  });
 });
