@@ -1,12 +1,21 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import {
+  createClient,
+  PostgrestError,
+  SupabaseClient,
+} from '@supabase/supabase-js';
 import {
   ENV_SUPABASE_SECRET_KEY,
   ENV_SUPABASE_URL,
 } from 'src/common/constants/database.constants';
 import { Database, Tables } from 'src/common/types/database.types';
-import { CreateHabitDto } from 'src/modules/habit/dto/create-habit.dto';
 
 @Injectable()
 export class SupabaseService {
@@ -35,6 +44,41 @@ export class SupabaseService {
     this.supabase = createClient(supabaseUrl, supabaseKey);
   }
 
+  /**
+   * Maps Supabase PostgrestError to appropriate NestJS HTTP exceptions
+   */
+  private handleSupabaseError(error: PostgrestError): never {
+    // Log the error for debugging
+    this.logger.error(
+      `Supabase error: ${error.code} - ${error.message}`,
+      error.details || error.hint,
+    );
+
+    // PGRST116: The result contains 0 rows (not found)
+    if (error.code === 'PGRST116') {
+      throw new NotFoundException('Resource not found');
+    }
+
+    // PostgreSQL constraint violation error codes
+    // 23505: unique_violation
+    // 23503: foreign_key_violation
+    // 23502: not_null_violation
+    if (
+      error.code === '23505' ||
+      error.code === '23503' ||
+      error.code === '23502'
+    ) {
+      throw new BadRequestException(
+        error.message || 'Database constraint violation',
+      );
+    }
+
+    // For other errors, throw internal server error
+    throw new InternalServerErrorException(
+      'An unexpected database error occurred',
+    );
+  }
+
   // TODO implement pagination
   async getHabits(): Promise<Array<Tables<'habit'>>> {
     const { data, error } = await this.supabase
@@ -42,10 +86,10 @@ export class SupabaseService {
       .select('*')
       .limit(10);
     if (error) {
-      throw new Error(error.message);
+      this.handleSupabaseError(error);
     }
 
-    return data;
+    return data || [];
   }
 
   async getHabitById(id: number): Promise<Tables<'habit'>> {
@@ -55,25 +99,29 @@ export class SupabaseService {
       .eq('id', id)
       .single();
     if (error) {
-      throw new Error(error.message);
+      this.handleSupabaseError(error);
     }
 
     return data;
   }
 
-  // TODO create return type
-  // TODO extend mock
-  // TODO look into error handling
-  async createHabit(createHabitDto: CreateHabitDto) {
-    const { data, error } = await this.supabase
-      .from('habit')
-      .insert([createHabitDto])
-      .select()
-      .single();
+  // async createHabit(createHabitDto: CreateHabitDto) {
+  //   const { data, error } = await this.supabase
+  //     .from('habit')
+  //     .insert([createHabitDto])
+  //     .select()
+  //     .single();
 
-    if (error) {
-      throw new Error(error.message);
-    }
-    return data;
-  }
+  //   if (error) {
+  //     this.handleSupabaseError(error);
+  //   }
+
+  //   if (!data) {
+  //     throw new InternalServerErrorException(
+  //       'Failed to create habit: no data returned',
+  //     );
+  //   }
+
+  //   return data;
+  // }
 }

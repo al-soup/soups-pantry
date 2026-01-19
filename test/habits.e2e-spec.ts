@@ -75,5 +75,9 @@ describe('HabitController (e2e)', () => {
     it('should return 400 for invalid id', () => {
       return request(app.getHttpServer()).get('/habits/invalid').expect(400);
     });
+
+    it('should return 404 for non-existent id', () => {
+      return request(app.getHttpServer()).get('/habits/999999').expect(404);
+    });
   });
 });

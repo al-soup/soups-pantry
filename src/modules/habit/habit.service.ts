@@ -28,14 +28,9 @@ export class HabitService {
   async getHabitById(id: number): Promise<GetHabitDto> {
     const habit = await this.supabaseService.getHabitById(id);
 
-    // TODO improve error handling
-    if (habit.completed_at === null) {
-      throw new Error('Habit not found or not completed');
-    }
-
     const dto: GetHabitDto = {
       action_id: habit.action_id,
-      completed_at: habit.completed_at,
+      completed_at: habit.completed_at ?? '',
       id: habit.id,
     };
     if (habit.note) {
