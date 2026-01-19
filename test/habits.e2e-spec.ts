@@ -5,7 +5,7 @@ import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
 import { GetHabitDto } from 'src/modules/habit/dto/get-habit.dto';
 
-describe('HabitsController (e2e)', () => {
+describe('HabitController (e2e)', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

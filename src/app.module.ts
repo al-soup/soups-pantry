@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { HabitModule } from './modules/habit/habit.module';
 
 @Module({
@@ -23,6 +22,5 @@ import { HabitModule } from './modules/habit/habit.module';
     HabitModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
