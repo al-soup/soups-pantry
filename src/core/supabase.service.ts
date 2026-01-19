@@ -6,7 +6,7 @@ import {
   ENV_SUPABASE_URL,
 } from 'src/common/constants/database.constants';
 import { Database, Tables } from 'src/common/types/database.types';
-import { CreateHabitDto } from 'src/modules/habits/dto/create-habit.dto';
+import { CreateHabitDto } from 'src/modules/habit/dto/create-habit.dto';
 
 @Injectable()
 export class SupabaseService {

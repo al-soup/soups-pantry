@@ -1,24 +1,24 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SupabaseService } from 'src/core/supabase.service';
 import { supabaseMock } from 'test/mocks/supabase.mock';
-import { HabitsController } from './habits.controller';
-import { HabitsService } from './habits.service';
+import { HabitController } from './habit.controller';
+import { HabitService } from './habit.service';
 import { GetHabitDto } from './dto/get-habit.dto';
 
-describe('HabitsController', () => {
-  let controller: HabitsController;
+describe('HabitController', () => {
+  let controller: HabitController;
   let module: TestingModule;
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
       providers: [
-        HabitsService,
+        HabitService,
         { provide: SupabaseService, useValue: supabaseMock },
       ],
-      controllers: [HabitsController],
+      controllers: [HabitController],
     }).compile();
 
-    controller = module.get<HabitsController>(HabitsController);
+    controller = module.get<HabitController>(HabitController);
   });
 
   it('should be defined', () => {
@@ -40,9 +40,9 @@ describe('HabitsController', () => {
       },
     ];
 
-    const habitsService = module.get<HabitsService>(HabitsService);
+    const habitService = module.get<HabitService>(HabitService);
     const getHabitsSpy = jest
-      .spyOn(habitsService, 'getHabits')
+      .spyOn(habitService, 'getHabits')
       .mockResolvedValue(habitDtos);
 
     const result = await controller.findAll();
@@ -59,9 +59,9 @@ describe('HabitsController', () => {
       note: 'Test note',
     };
 
-    const habitsService = module.get<HabitsService>(HabitsService);
+    const habitService = module.get<HabitService>(HabitService);
     const getHabitByIdSpy = jest
-      .spyOn(habitsService, 'getHabitById')
+      .spyOn(habitService, 'getHabitById')
       .mockResolvedValue(habitDto);
 
     const result = await controller.findOne(1);

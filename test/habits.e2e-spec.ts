@@ -3,7 +3,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
-import { GetHabitDto } from 'src/modules/habits/dto/get-habit.dto';
+import { GetHabitDto } from 'src/modules/habit/dto/get-habit.dto';
 
 describe('HabitsController (e2e)', () => {
   let app: INestApplication<App>;

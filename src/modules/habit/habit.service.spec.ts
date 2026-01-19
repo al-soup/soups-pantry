@@ -1,22 +1,22 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SupabaseService } from 'src/core/supabase.service';
 import { supabaseMock } from 'test/mocks/supabase.mock';
-import { HabitsService } from './habits.service';
+import { HabitService } from './habit.service';
 import { Tables } from 'src/common/types/database.types';
 
-describe('HabitsService', () => {
-  let service: HabitsService;
+describe('HabitService', () => {
+  let service: HabitService;
   let module: TestingModule;
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
       providers: [
-        HabitsService,
+        HabitService,
         { provide: SupabaseService, useValue: supabaseMock },
       ],
     }).compile();
 
-    service = module.get<HabitsService>(HabitsService);
+    service = module.get<HabitService>(HabitService);
   });
 
   it('should be defined', () => {

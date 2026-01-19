@@ -3,7 +3,7 @@ import { SupabaseService } from 'src/core/supabase.service';
 import { GetHabitDto } from './dto/get-habit.dto';
 
 @Injectable()
-export class HabitsService {
+export class HabitService {
   constructor(private readonly supabaseService: SupabaseService) {}
 
   async getHabits(): Promise<GetHabitDto[]> {

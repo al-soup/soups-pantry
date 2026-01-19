@@ -1,21 +1,21 @@
 import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { GetHabitDto } from './dto/get-habit.dto';
-import { HabitsService } from './habits.service';
+import { HabitService } from './habit.service';
 
 @Controller('habits')
-export class HabitsController {
-  constructor(private readonly habitsService: HabitsService) {}
+export class HabitController {
+  constructor(private readonly habitService: HabitService) {}
 
   @Get()
   @ApiOperation({
     summary: 'Get all habits',
     description: 'Retrieves a list of all habits',
-    tags: ['habits'],
+    tags: ['habit'],
   })
   @ApiOkResponse({ type: [GetHabitDto] })
   async findAll(): Promise<GetHabitDto[]> {
-    const habits = await this.habitsService.getHabits();
+    const habits = await this.habitService.getHabits();
 
     return habits.filter((habit) => habit.completed_at !== null);
   }
@@ -26,7 +26,7 @@ export class HabitsController {
   @ApiOperation({
     summary: 'Get a single habit',
     description: 'Retrieves a single habit by ID',
-    tags: ['habits'],
+    tags: ['habit'],
   })
   @ApiParam({
     name: 'id',
@@ -35,7 +35,7 @@ export class HabitsController {
   })
   @ApiOkResponse({ type: GetHabitDto })
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<GetHabitDto> {
-    return this.habitsService.getHabitById(id);
+    return this.habitService.getHabitById(id);
   }
 
   //   @Post()
@@ -57,6 +57,6 @@ export class HabitsController {
   //       completed_at: new Date().toISOString(),
   //       id: 1,
   //     };
-  //     // return this.habitsService.createHabit(createHabitDto);
+  //     // return this.habitService.createHabit(createHabitDto);
   //   }
 }
