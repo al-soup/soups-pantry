@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { HabitsModule } from './modules/habits/habits.module';
+import { HabitModule } from './modules/habit/habit.module';
 
 @Module({
   imports: [
@@ -20,9 +19,8 @@ import { HabitsModule } from './modules/habits/habits.module';
         `.env.${process.env.NODE_ENV || 'development'}.local`,
       ],
     }),
-    HabitsModule,
+    HabitModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

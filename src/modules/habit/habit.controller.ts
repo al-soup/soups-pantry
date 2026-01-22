@@ -1,0 +1,66 @@
+import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
+import { GetHabitDto } from './dto/get-habit.dto';
+import { HabitService } from './habit.service';
+import { PaginatedResponseDto } from 'src/common/dto/paginated-response.dto';
+import { PaginatedHabitsResponseDto } from './dto/paginated-habits-response.dto';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+
+@Controller('habits')
+export class HabitController {
+  constructor(private readonly habitService: HabitService) {}
+
+  @Get()
+  @ApiOperation({
+    summary: 'Get all habits',
+    description: 'Retrieves a paginated list of all habits',
+    tags: ['habit'],
+  })
+  @ApiOkResponse({
+    description: 'Paginated list of habits',
+    type: PaginatedHabitsResponseDto,
+  })
+  async findAll(
+    @Query() paginationQuery: PaginationQueryDto,
+  ): Promise<PaginatedResponseDto<GetHabitDto>> {
+    return this.habitService.getHabits(paginationQuery);
+  }
+
+  @Get(':id')
+  @ApiOperation({
+    summary: 'Get a single habit',
+    description: 'Retrieves a single habit by ID',
+    tags: ['habit'],
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'The ID of the habit to retrieve',
+  })
+  @ApiOkResponse({ type: GetHabitDto })
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<GetHabitDto> {
+    return this.habitService.getHabitById(id);
+  }
+
+  //   @Post()
+  //   @ApiOperation({
+  //     summary: 'Create a new habit',
+  //     description: 'Creates a new habit in the database',
+  //     tags: ['habits'],
+  //   })
+  //   @ApiCreatedResponse({
+  //     type: HabitResponseDto,
+  //     description: 'The habit has been successfully created',
+  //   })
+  //   async create(
+  //     @Body() createHabitDto: CreateHabitDto,
+  //   ): Promise<HabitResponseDto> {
+  //     console.log(createHabitDto);
+  //     return {
+  //       action_id: 0,
+  //       completed_at: new Date().toISOString(),
+  //       id: 1,
+  //     };
+  //     // return this.habitService.createHabit(createHabitDto);
+  //   }
+}

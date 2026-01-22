@@ -19,6 +19,7 @@ interface NumberApiPropertyOptions {
   example?: number;
   nullable?: boolean;
   validationOptions?: ValidationOptions;
+  default?: number;
 }
 
 export function NumberApiProperty(options?: NumberApiPropertyOptions) {
@@ -52,6 +53,7 @@ export function NumberApiProperty(options?: NumberApiPropertyOptions) {
       nullable: options?.nullable === true,
       required: !options?.readOnly && options?.optional !== true,
       readOnly: options?.readOnly,
+      default: options?.default,
     }),
   );
 
