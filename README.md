@@ -177,18 +177,22 @@ NODE_ENV=production pnpm run start:dev
 
 ## TODOs
 
-### Infrastructure
-
-- [ ] Deploy the app on Vercel. Go through usasge limits of Vercel & Supabase.
-- [ ] Setup caching for the CI step 'Start and seed Supabase'. E.g. with [Caching Action](https://github.com/actions/cache). with hashing the *supabase/config.ci.toml* and the migrations files.
-- [ ] Add CI step for unit test coverage
-- [ ] Deploy Swagger Spec
-
 ### Features
 
-- [ ] Add GET endpoint for a single habit
-- [ ] Add pagination to GET /habits
+- [ ] Add a GitHub-Like summary endpoint for habits
 - [ ] Add Authenticated routes by using Supabase signing keys
-- [ ] Test the validator decorators
 - [ ] Create a CRON that checks the [Strava API](https://developers.strava.com/docs/getting-started/) daily and creates habit entries for cycling
 - [ ] Write a real-time polling app in Nest
+- [ ] Add a speech-to-text endpoint using [AssemblyAI](https://www.assemblyai.com/)
+
+### Infrastructure
+
+- [ ] Setup caching for the CI step 'Start and seed Supabase'. E.g. with [Caching Action](https://github.com/actions/cache). with hashing the *supabase/config.ci.toml* and the migrations files.
+- [ ] Add CI step for unit test coverage
+- [ ] Add health checks with @nestjs/terminus
+- [ ] Improve logger setup
+
+### Improvements
+
+- [ ] Simplify pipes back to Nest standard
+- [ ] Make max page size and default page size configurable pagination of different DTOs

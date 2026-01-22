@@ -79,17 +79,63 @@ export class SupabaseService {
     );
   }
 
-  // TODO implement pagination
-  async getHabits(): Promise<Array<Tables<'habit'>>> {
-    const { data, error } = await this.supabase
-      .from('habit')
-      .select('*')
-      .limit(10);
+  async getHabits(
+    limit?: number,
+    offset?: number,
+  ): Promise<Array<Tables<'habit'>>> {
+    let query = this.supabase.from('habit').select('*');
+
+    if (limit !== undefined && offset !== undefined) {
+      query = query.range(offset, offset + limit - 1);
+    }
+
+    const { data, error } = await query;
     if (error) {
       this.handleSupabaseError(error);
     }
 
     return data || [];
+  }
+
+  async getCompletedHabits(
+    limit: number,
+    offset: number,
+  ): Promise<Array<Tables<'habit'>>> {
+    const { data, error } = await this.supabase
+      .from('habit')
+      .select('*')
+      .not('completed_at', 'is', null)
+      .range(offset, offset + limit - 1);
+
+    if (error) {
+      this.handleSupabaseError(error);
+    }
+
+    return data || [];
+  }
+
+  async getCompletedHabitsCount(): Promise<number> {
+    const { count, error } = await this.supabase
+      .from('habit')
+      .select('*', { count: 'exact', head: true })
+      .not('completed_at', 'is', null);
+
+    if (error) {
+      this.handleSupabaseError(error);
+    }
+
+    return count || 0;
+  }
+
+  async getHabitsCount(): Promise<number> {
+    const { count, error } = await this.supabase
+      .from('habit')
+      .select('*', { count: 'exact', head: true });
+    if (error) {
+      this.handleSupabaseError(error);
+    }
+
+    return count || 0;
   }
 
   async getHabitById(id: number): Promise<Tables<'habit'>> {

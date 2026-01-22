@@ -1,6 +1,9 @@
-
-
+@_
 GET /habits
+
+GET /habits?page=1&limit=10
+
+GET /habits?page=2&limit=10
 
 GET /habits/1
 

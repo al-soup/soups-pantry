@@ -1,7 +1,10 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { GetHabitDto } from './dto/get-habit.dto';
 import { HabitService } from './habit.service';
+import { PaginatedResponseDto } from 'src/common/dto/paginated-response.dto';
+import { PaginatedHabitsResponseDto } from './dto/paginated-habits-response.dto';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
 
 @Controller('habits')
 export class HabitController {
@@ -10,17 +13,18 @@ export class HabitController {
   @Get()
   @ApiOperation({
     summary: 'Get all habits',
-    description: 'Retrieves a list of all habits',
+    description: 'Retrieves a paginated list of all habits',
     tags: ['habit'],
   })
-  @ApiOkResponse({ type: [GetHabitDto] })
-  async findAll(): Promise<GetHabitDto[]> {
-    const habits = await this.habitService.getHabits();
-
-    return habits.filter((habit) => habit.completed_at !== null);
+  @ApiOkResponse({
+    description: 'Paginated list of habits',
+    type: PaginatedHabitsResponseDto,
+  })
+  async findAll(
+    @Query() paginationQuery: PaginationQueryDto,
+  ): Promise<PaginatedResponseDto<GetHabitDto>> {
+    return this.habitService.getHabits(paginationQuery);
   }
-
-  // TODO implement 404 and 500
 
   @Get(':id')
   @ApiOperation({

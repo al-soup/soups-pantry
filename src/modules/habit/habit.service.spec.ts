@@ -8,7 +8,26 @@ describe('HabitService', () => {
   let service: HabitService;
   let module: TestingModule;
 
+  const habits: Array<Tables<'habit'>> = [
+    {
+      id: 1,
+      action_id: 123,
+      completed_at: '2024-06-01T12:00:00Z',
+      created_at: '2024-06-01T10:00:00Z',
+      note: 'Test note',
+    },
+    {
+      id: 3,
+      action_id: 789,
+      completed_at: '2024-06-02T12:00:00Z',
+      created_at: '2024-06-02T10:00:00Z',
+      note: null,
+    },
+  ];
+
   beforeEach(async () => {
+    jest.clearAllMocks();
+
     module = await Test.createTestingModule({
       providers: [
         HabitService,
@@ -23,47 +42,32 @@ describe('HabitService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should return habit dtos', async () => {
-    const habits: Array<Tables<'habit'>> = [
-      {
-        id: 1,
-        action_id: 123,
-        completed_at: '2024-06-01T12:00:00Z',
-        created_at: '2024-06-01T10:00:00Z',
-        note: 'Test note',
-      },
-      {
-        id: 2,
-        action_id: 456,
-        completed_at: null,
-        created_at: '2024-06-01T10:00:00Z',
-        note: null,
-      },
-      {
-        id: 3,
-        action_id: 789,
-        completed_at: '2024-06-02T12:00:00Z',
-        created_at: '2024-06-02T10:00:00Z',
-        note: null,
-      },
-    ];
+  it('should return a paginated response', async () => {
+    supabaseMock.getCompletedHabits.mockResolvedValue(habits);
+    supabaseMock.getCompletedHabitsCount.mockResolvedValue(habits.length);
 
+    const result = await service.getHabits({ page: 1, limit: 1 });
+
+    expect(result.meta).toBeDefined();
+    expect(result.meta.total).toBe(2);
+    expect(result.meta.page).toBe(1);
+    expect(result.meta.totalPages).toBe(2);
+    expect(result.meta.hasNextPage).toBe(true);
+  });
+
+  it('should contain habit dtos', async () => {
     supabaseMock.getHabits.mockResolvedValue(habits);
 
-    const result = await service.getHabits();
+    const result = await service.getHabits({ page: 1, limit: 10 });
 
-    expect(result).toHaveLength(2);
-    expect(result[0]).toEqual({
+    expect(result.data).toHaveLength(2);
+    expect(result.data[0]).toEqual({
       id: 1,
       action_id: 123,
       completed_at: '2024-06-01T12:00:00Z',
       note: 'Test note',
     });
-    expect(result[1]).toEqual({
-      id: 3,
-      action_id: 789,
-      completed_at: '2024-06-02T12:00:00Z',
-    });
-    expect(supabaseMock.getHabits).toHaveBeenCalledTimes(1);
+    expect(supabaseMock.getCompletedHabits).toHaveBeenCalledTimes(1);
+    expect(supabaseMock.getCompletedHabitsCount).toHaveBeenCalledTimes(1);
   });
 });

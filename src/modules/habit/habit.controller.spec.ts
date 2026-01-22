@@ -43,11 +43,21 @@ describe('HabitController', () => {
     const habitService = module.get<HabitService>(HabitService);
     const getHabitsSpy = jest
       .spyOn(habitService, 'getHabits')
-      .mockResolvedValue(habitDtos);
+      .mockResolvedValue({
+        data: habitDtos,
+        meta: {
+          total: 2,
+          page: 1,
+          limit: 1,
+          totalPages: 2,
+          hasNextPage: true,
+          hasPreviousPage: false,
+        },
+      });
 
-    const result = await controller.findAll();
+    const result = await controller.findAll({ page: 1, limit: 1 });
 
-    expect(result).toEqual(habitDtos);
+    expect(result.data).toEqual(habitDtos);
     expect(getHabitsSpy).toHaveBeenCalledTimes(1);
   });
 
